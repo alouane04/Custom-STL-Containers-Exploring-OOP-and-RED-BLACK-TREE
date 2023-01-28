@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:39:38 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/26 15:37:09 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/28 19:34:33 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,6 +305,8 @@ namespace ft
 		////////////////////////////// MODIFIERS //////////////////////////////////
 
 
+			// It's assigning the values of the vector to the values between the two iterators.
+
 			template <class InputIterator>
 			void assing(InputIterator first, InputIterator last, typenamef ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
@@ -318,8 +320,26 @@ namespace ft
 				}
 				while (first != last)
 				{
-					_allocator.construct(_array + _size++, first++);
+					_allocator.construct(&_array + _size++, first++);
 				}
+			}
+
+			// It's assigning the one val n time.
+
+			void	assign(size_type n, const value_type &val)
+			{
+				clear();
+				if (_capacity < n)
+				{
+					_allocator.deallocate(_array, _capacity);
+					_array = _allocator.allocate(n);
+					_capacity = n;
+				}
+				for (size_type i = 0; i < n; i++)
+				{
+					_allocator.construct(&_array[i], val);
+				}
+				_size = n;
 			}
 
 			// It's swapping the values of the vector with the values of the other vector.
@@ -355,12 +375,202 @@ namespace ft
 				_size--;	
 			}
 
+			// If no capacity available it add double 
+			// and it's add the val to the data and add one to the size
+
 			void	push_back(const value_type &val)
 			{
+				if (_size == _capacity)
+				{
+					if (_capacity == 0)
+						reserve(1);
+					else
+						reserve(_capacity * 2);
+				}
+				_array[_size++] = val;
+			}
+
+			// It's inserting the value at the position of the iterator.
+
+			iterator insert(iterator pos, const value_type &value)
+			{
+				size_type position = pos - begin();
 				
+				if (_size == _capacity)
+				{
+					if (_capacity == 0)
+						reserve(1);
+					else
+						reserve(_capacity * 2);
+					// It's updating the position of the iterator.
+					pos = position + begin();
+				}
+
+				// It's moving the elements of the array to the right.
+
+				for (size_type i = _size; i > position; i--)
+				{
+					_array[i] = _array[i - 1];
+				}
+
+				// adding the value to the array and returning the iterator to the position.
+
+				_array[position] = value;
+				_size++;
+				return (begin() + position);
+			}
+
+			// Inserting n elements of value value at position pos.
+
+			void	insert(iterator pos, size_type n, const value_type &value)
+			{
+				size_type position = pos - begin();
+				
+				if (n == 0)
+					return ;
+					
+				if (_capacity == 0)
+					reserve(n);
+				else if (_capacity < _size + n)
+				{
+					reserve(_capacity * 2);
+					pos = position + begin();
+				}
+				
+				// It's moving the elements of the array to the right and considering n.
+
+				for (size_type i = _size; i > position; i--)
+				{
+					_array[i + (n - 1)] = _array[i - 1];
+				}
+
+				// It's adding the value n times to the array.
+
+				for (size_type i = 0; i < n; i++)
+				{
+					_array[position + i] = value;
+				}
+				_size += n;
+			}
+
+			// It's inserting elements from the array pointed to by first to the array pointed to by pos.
+
+			template <typename InputIterator>
+				void insert (iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
+			{
+				size_type position = pos - begin();
+				
+				size_type dist = last - first;
+				
+				if (_capacity == 0)
+					reserve(dis);
+				else if (_capacity < _size + dist)
+				{
+					reserve(_capacity * 2 + dist);
+					pos = position + begin();
+				}
+
+				//	It's moving the elements of the array to the right and considering dist.
+
+				for (size_type i = _size; i < position; i--)
+				{
+					_array[i + dist - 1] = _array[i - 1];
+				}
+
+				// Copying the elements from the array pointed to by first to the array pointed to by _array.
+
+				for (size_type i = 0; i < dist; i++)
+				{
+					_array[position + i] = 	*first++;
+				}
+				_size += dist;
+			}
+
+			iterator erase(iterator pos)
+			{
+				return (erase(pos, pos + 1));
+			}
+
+			// Erasing the elements from the vector.
+
+			iterator erase(iterator first, iterator last)
+			{
+
+				// Finding the distance between the first and last iterators.
+
+				size_type start = ft::distance(begin(), first);
+				size_type end = ft::distance(begin(), last);
+				
+				// Destroying the elements in the array.
+
+				for (size_type i = start; i < end; i++)
+				{
+					_allocator.destroy(_array + i);
+				}
+
+				// Moving the elements after the erased elements to the left.
+
+				size_type mark = ft::distance(first, last);
+				for (size_type i = end; i < _size; i++)
+				{
+					_allocator.construct(&_array[i - mark], _array[i]);
+					_allocator.destroy(_array + i);
+				}
+
+				_size -= mark;
+				return (first);
 			}
 
 	};
+
+	////////////////////////////////////// NON-MEMBER ////////////////////////////////////////
+	
+	// Defining the relational operators for the vector class.
+
+	template<class T, class Alloc>
+	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+		
+	template<class T, class Alloc>
+	bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	template<class T, class Alloc>
+	bool operator<(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+		
+	template<class T, class Alloc>
+	bool operator<=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		return (!(rhs < lhs));
+	}
+		
+	template<class T, class Alloc>
+	bool operator>(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		return (rhs < lhs);
+	}
+
+	template<class T, class Alloc>
+	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	{
+		return (!(lhs < rhs));
+	}
+
+	template <class T, class Alloc>
+	void swap(vector<T, Alloc> &lhs, vector<T, Alloc> &rhs)
+	{
+		lhs.swap(rhs);
+	}
+
 }
 
 #endif
