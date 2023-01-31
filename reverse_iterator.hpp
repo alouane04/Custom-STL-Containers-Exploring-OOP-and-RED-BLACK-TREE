@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 09:22:04 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/24 10:43:53 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:23:31 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,9 @@ namespace ft
 	}
 
 	template <class L_Iterator, class R_Iterator>
-	bool operator>(const reverse_iterator<L_Iterator> &lhs, const reverse_iterator<R_Iterator> &rhs)
+	bool operator<(const reverse_iterator<L_Iterator> &lhs, const reverse_iterator<R_Iterator> &rhs)
 	{
-		return (rhs.base() > lhs.base());
+		return (rhs.base() < lhs.base());
 	}
 
 	template <class L_Iterator, class R_Iterator>
@@ -148,9 +148,9 @@ namespace ft
 	}
 
 	template <class L_Iterator, class R_Iterator>
-	bool operator>=(const reverse_iterator<L_Iterator> &lhs, const reverse_iterator<R_Iterator> &rhs)
+	bool operator<=(const reverse_iterator<L_Iterator> &lhs, const reverse_iterator<R_Iterator> &rhs)
 	{
-		return (rhs.base() >= lhs.base());
+		return (rhs.base() <= lhs.base());
 	}
 
 } // namespace ft

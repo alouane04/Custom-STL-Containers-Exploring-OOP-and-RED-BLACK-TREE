@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 18:24:15 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/24 18:31:31 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:35:07 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ namespace ft
 {
 	// Comparing two ranges of elements.
 	template<class InputIterator1, class InputIterator2>
-	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
 	{
 		while (first1 != last1)
 		{
@@ -31,7 +31,7 @@ namespace ft
 
 	// Comparing two ranges of elements and returning true if they are equal.
 	template<class InputIterator1, class InputIterator2, class BinaryPredicate>
-	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, BinaryPredicate pred)
+	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred)
 	{
 		while (first1 != last1)
 		{

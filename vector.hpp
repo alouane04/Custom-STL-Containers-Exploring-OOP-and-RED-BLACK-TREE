@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 09:39:38 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/28 19:34:33 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/29 19:26:38 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace ft
 			typedef T														value_type;
 			typedef Allocator												allocator_type;
 			typedef typename allocator_type::reference						reference;
-			typedef typename allocator_type::const_reference 				reference;
+			typedef typename allocator_type::const_reference 				const_reference;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::const_pointer					const_pointer;
 			typedef typename allocator_type::size_type						size_type;
@@ -62,20 +62,17 @@ namespace ft
 
 			// It's a default constructor
  
-			explicit vector(const allocator_type &alloc = allocator_type()) : _allocator(alloc)
+			explicit vector(const allocator_type &alloc = allocator_type()) : _allocator(alloc), _capacity(0), _size(0), _array(NULL)
 			{
-				_capacity = 0;
-				_size = 0;
-				_array = NULL;
+				_array = _allocator.allocate(_capacity);
 			}
 
 			// It's a fill constructor that takes a size and a value
 			// 		and allocates an array of that size and fills it with the value.
 
-			explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _allocator(alloc), _array(NULL)
+			explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
+			: _allocator(alloc), _capacity(n), _size(n), _array(NULL)
 			{
-				_capacity = n;
-				_size = n;
 				_array = _allocator.allocate(n);
 				for (size_type i = 0; i < _size; ++i)
 				{
@@ -88,18 +85,19 @@ namespace ft
 			//			and fills it with the values between the two iterators.
 
 			template <class InputIterator>
-			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()) : _allocator(alloc), _array(NULL), _size(ft::distance(first, last)), _capacity(ft::distance(first, last))
+			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+				: _allocator(alloc), _capacity(ft::distance(first, last)), _size(ft::distance(first, last)), _array(NULL)
 			{
 				_array = _allocator.allocate(_capacity);
 				for (size_type i = 0; i < _size; ++i)
 				{
-					_allocatr.construct(_array + i, *first++);
+					_allocator.construct(_array + i, *first++);
 				}
 			}
 			
 			// It's a copy constructor.
 
-			vector(const vector &other) : _array(NULL), _allocator(other._allocator), _size(other._size), _capacity(other._size)
+			vector(const vector &other) : _allocator(other._allocator), _capacity(other._size), _size(other._size), _array(NULL)
 			{
 				_array = _allocator.allocate(other._capacity);
 				for (size_type i = 0; i < other._size; ++i)
@@ -204,12 +202,11 @@ namespace ft
 						if (_capacity == _size)
 						{
 							if (_capacity == 0)
-								size_type capacity = 1;
+								reserve(1);
 							else
-								size_type capacity = _capacity + 1;
-							reserve(capacity);
+								reserve(_capacity + 1);
 						}
-						_data[_size] = val;
+						_array[_size] = val;
 						_size++;
 					}
 			}
@@ -308,20 +305,22 @@ namespace ft
 			// It's assigning the values of the vector to the values between the two iterators.
 
 			template <class InputIterator>
-			void assing(InputIterator first, InputIterator last, typenamef ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+			void assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
 				clear();
 				size_type size = ft::distance(first, last);
-				if (n > capacity)
+				if (size > _capacity)
 				{
 					_allocator.deallocate(_array, _capacity);
-					_array = _allocator.allocate(n);
-					_capacity = n;
+					_array = _allocator.allocate(size);
+					_capacity = size;
 				}
-				while (first != last)
+				size_type i = 0;
+				for (; first != last; ++i, ++first)
 				{
-					_allocator.construct(&_array + _size++, first++);
+					_allocator.construct(&_array[i], *first);
 				}
+				_size = i;
 			}
 
 			// It's assigning the one val n time.
@@ -403,7 +402,7 @@ namespace ft
 					else
 						reserve(_capacity * 2);
 					// It's updating the position of the iterator.
-					pos = position + begin();
+					pos = begin() + position;
 				}
 
 				// It's moving the elements of the array to the right.
@@ -434,7 +433,7 @@ namespace ft
 				else if (_capacity < _size + n)
 				{
 					reserve(_capacity * 2);
-					pos = position + begin();
+					pos = begin() + position;
 				}
 				
 				// It's moving the elements of the array to the right and considering n.
@@ -463,11 +462,11 @@ namespace ft
 				size_type dist = last - first;
 				
 				if (_capacity == 0)
-					reserve(dis);
+					reserve(dist);
 				else if (_capacity < _size + dist)
 				{
 					reserve(_capacity * 2 + dist);
-					pos = position + begin();
+					pos = begin() + position;
 				}
 
 				//	It's moving the elements of the array to the right and considering dist.
@@ -532,9 +531,9 @@ namespace ft
 	{
 		if (lhs.size() != rhs.size())
 			return (false);
-		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
-		
+
 	template<class T, class Alloc>
 	bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
@@ -560,7 +559,7 @@ namespace ft
 	}
 
 	template<class T, class Alloc>
-	bool operator==(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+	bool operator>=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
 	{
 		return (!(lhs < rhs));
 	}

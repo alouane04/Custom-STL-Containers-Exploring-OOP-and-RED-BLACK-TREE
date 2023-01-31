@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 11:53:26 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/24 09:25:23 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/29 16:21:03 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 
 namespace ft
 {
+	
+	// It's a way to get the type of the iterator.
+	struct	input_iterator_tag {};
+	struct	output_iterator_tag {};
+	struct	forward_iterator_tag : public input_iterator_tag {};
+	struct	bidirectional_iterator_tag : public forward_iterator_tag {};
+	struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
+
+
 	// It's a template struct that is used to get the type of the iterator.
 	template<class Iterator>
 	struct iterator_traits
@@ -36,7 +45,7 @@ namespace ft
 		typedef T value_type;
 		typedef T* pointer;
 		typedef T& reference;
-		typedef random_access_iterator_tag iterator_category;
+		typedef ft::random_access_iterator_tag iterator_category;
 	};
 
 	template<class T>
@@ -59,17 +68,11 @@ namespace ft
 		typedef Category iterator_category;
 	};
 
-	// It's a way to get the type of the iterator.
-	struct	input_iterator_tag {};
-	struct	output_iterator_tag {};
-	struct	forward_iterator_tag : public input_iterator_tag {};
-	struct	bidirectional_iterator_tag : public forward_iterator_tag {};
-	struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 
 
 	template<class IT>
-	typename ft::iterator_traits<IT>::ifference_type do_distance(IT first, IT last, ft::input_iterator_tag)
+	typename ft::iterator_traits<IT>::difference_type do_distance(IT first, IT last, ft::input_iterator_tag)
 	{
 		// It's a way to get the type of the iterator.
 		typename ft::iterator_traits<IT>::difference_type res = 0;
