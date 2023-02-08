@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 15:56:43 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/29 20:14:45 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/01/31 16:17:12 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -596,7 +596,7 @@ int main()
 	// for (ft::vector<int>::iterator it = vec.begin(); it != vec.end(); it++)
 	// 	std::cout << *it << std::endl;
 
-	std::cout << stack_unit_tests() << std::endl;
+	std::cout << vector_unit_tests() << std::endl;
 
 	return (0);
 }

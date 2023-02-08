@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 09:22:04 by ariahi            #+#    #+#             */
-/*   Updated: 2023/01/29 16:23:31 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:55:05 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,11 @@ namespace ft
 				return *(*this + n);
 			}
 
+			// It's a cast operator. It's return a object constructed from current object.
+
 			operator const_reverse_iterator<Iterator>() const
 			{
+				// It's return a object constructed from current object
 				return (const_reverse_iterator<Iterator>(current));
 			}
 

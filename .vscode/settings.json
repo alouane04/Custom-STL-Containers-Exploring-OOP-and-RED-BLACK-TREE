@@ -62,7 +62,11 @@
 		"utility": "cpp",
 		"__functional_03": "cpp",
 		"memory_resource": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"__tree": "cpp",
+		"deque": "cpp",
+		"map": "cpp",
+		"set": "cpp"
 	},
 	"docwriter.style": "Google"
 }
