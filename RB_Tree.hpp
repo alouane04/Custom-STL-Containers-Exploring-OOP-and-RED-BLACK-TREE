@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 11:20:28 by ariahi            #+#    #+#             */
-/*   Updated: 2023/02/08 13:53:33 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/13 11:44:24 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ namespace ft
 			// It's the default constructor of the RB_Tree.
 			RB_Tree()
 			{
-				root = alloc_node();
 				nil = alloc_node();
+				root = nil;
 				size = 0;
 				comparator = comparator_type();
 				allocator = allocator_type();
@@ -62,8 +62,8 @@ namespace ft
 			// It's the comparator constructor of the RB_Tree.
 			RB_Tree(const comparator_type cmp)
 			{
-				root = alloc_node();
 				nil = alloc_node();
+				root = nil;
 				size = 0;
 				comparator = cmp;
 				allocator = allocator_type();
@@ -105,10 +105,10 @@ namespace ft
 
 
 			// It's searching for a node in root tree with the key value.
-			node_pointer search(const value_type &key)
+			node_pointer search(const value_type &key) const
 			{
 				node_pointer node = root;
-				while (node != nil)
+				while (node)
 				{
 					if (comparator(node->key_value, key))
 						node = node->right;
@@ -121,7 +121,7 @@ namespace ft
 			}
 
 			// It's searching for the minimum value in the tree.
-			node_pointer minimum(node_pointer node)
+			node_pointer minimum(node_pointer node) const
 			{
 				while (node != nil && node->left != nil)
 					node = node->left;
@@ -129,7 +129,7 @@ namespace ft
 			}
 
 			// It's searching for the maximum value in the tree.
-			node_pointer maximum(node_pointer node)
+			node_pointer maximum(node_pointer node) const
 			{
 				while (node != nil && node->right != nil)
 					node = node->right;
@@ -195,7 +195,7 @@ namespace ft
 				return (reverse_iterator(end()));
 			}
 
-			cost_reverse_iterator rbegin() const
+			const_reverse_iterator rbegin() const
 			{
 				return (const_reverse_iterator(end()));
 			}
@@ -275,7 +275,7 @@ namespace ft
 				size--;
 				delete_node(node);
 				if (tmp_black)
-					Delete_Fix_Up(sib);
+					delete_fix_up(sib);
 			}
 
 			// It's searching for the node with the key value,
@@ -344,26 +344,30 @@ namespace ft
 				root = nil;
 			}
 			
-			node_pointer get_node(value_type &key)
+			// Searching for the node with the key value.
+			node_pointer 
+			get_node(const value_type &key)
 			{
-				return (search(key))
+				return (search(key));
 			}
 
+			// Returning the root node of the tree.
 			node_pointer get_root()
 			{
 				return (root);
 			}
 
-			size_type get_size()
+			size_type get_size() const
 			{
 				return (size);
 			}
 			
-			size_type get_max_size()
+			size_type get_max_size() const
 			{
 				return (allocator.max_size());
 			}
 
+			// Swapping the contents of the two RB_Trees.
 			void Swap(RB_Tree &other)
 			{
 				std::swap(root, other.root);
@@ -373,12 +377,14 @@ namespace ft
 				std::swap(size, other.size);
 			}
 
-			bool key_exists(const value_type &key)
+			// Checking if the key exists in the tree.
+			bool key_exists(const value_type &key) const
 			{
+				// Searching for the key in the tree. If it is found, it returns true.
 				return (search(key) != nil);
 			}
 
-			bool Empty()
+			bool Empty() const
 			{
 				if (root == nil)
 					return (true);
@@ -540,7 +546,7 @@ namespace ft
 						}
 						if (sib->left->black && sib->right->black)
 						{
-							sib->black = fasle;
+							sib->black = false;
 							node = node->parent;
 						}
 						else if (sib->right->black)
@@ -571,7 +577,7 @@ namespace ft
 						}
 						if (sib->right->black && sib->left->black)
 						{
-							sib->black = fasle;
+							sib->black = false;
 							node = node->parent;
 						}
 						else if (sib->left->black)
@@ -597,7 +603,7 @@ namespace ft
 			// It's to fix the properties after the insertion,
 			// for more info about the algo please referce to this article:
 			// https://www.programiz.com/dsa/insertion-in-a-red-black-tree
-			void	inser_fix_up(node_pointer node)
+			void	insert_fix_up(node_pointer node)
 			{
 				while (node->parent->black == false)
 				{
@@ -607,7 +613,7 @@ namespace ft
 						{
 							node->parent->parent->right->black = true;
 							node->parent->black = true;
-							node->parent->parent->color = false;
+							node->parent->parent->black = false;
 							node = node->parent->parent;
 						}
 						else
@@ -628,7 +634,7 @@ namespace ft
 						{
 							node->parent->parent->left->black = true;
 							node->parent->black = true;
-							node->parent->parent->color = false;
+							node->parent->parent->black = false;
 							node = node->parent->parent;
 						}
 						else
@@ -657,7 +663,7 @@ namespace ft
 			node_pointer alloc_node()
 			{
 				node_pointer node = allocator.allocate(1);
-				allocate.construct(node, value_type());
+				allocator.construct(node, value_type());
 				return (node);
 			}
 
@@ -665,7 +671,7 @@ namespace ft
 			node_pointer alloc_node(const value_type &key)
 			{
 				node_pointer node = allocator.allocate(1);
-				allocate.construct(node, key);
+				allocator.construct(node, key);
 				size++;
 				return (node);
 			}
@@ -680,7 +686,7 @@ namespace ft
 			// It's freeing the tree.
 			void	free_tree(node_pointer node)
 			{
-				if (ndoe == nil)
+				if (node == nil)
 					return ;
 				free_tree(node->left);
 				free_tree(node->right);
@@ -689,7 +695,7 @@ namespace ft
 			}
 
 			// It's copying the tree.
-			nodee_pointer copy_tree(node_pointer node, node_pointer other_nil, node_pointer parent)
+			node_pointer copy_tree(node_pointer node, node_pointer other_nil, node_pointer parent)
 			{
 				if (node == other_nil)
 					return (nil);

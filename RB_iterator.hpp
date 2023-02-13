@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 13:22:11 by ariahi            #+#    #+#             */
-/*   Updated: 2023/02/08 11:59:35 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/12 12:39:53 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 namespace ft
 {
-	template <class T, class RB_Tree, class T&, class Pointer = T*, class Distance = ptrdiff_t>
+	template <class T, class RB_Tree, class Distance = ptrdiff_t, class Reference = T&, class Pointer = T*>
 	class RB_iterator
 	{
 		public:

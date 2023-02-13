@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 17:36:47 by ariahi            #+#    #+#             */
-/*   Updated: 2023/02/04 18:21:17 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/12 12:33:57 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ namespace ft
 	
 			T		key_value;
 			bool 	black;
-			RB_Tree	*left;
-			RB_Tree	*right;
-			RB_Tree	*parent;
+			RB_Node	*left;
+			RB_Node	*right;
+			RB_Node	*parent;
 			bool	nil;
 	
 			RB_Node() : black(true), left(NULL), right(NULL), parent(NULL) {};

@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/24 18:41:03 by ariahi            #+#    #+#             */
-/*   Updated: 2023/02/02 15:08:17 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/12 17:17:05 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ namespace ft
 	}
 
 	template<class T1, class T2>
-	pair<T1, T2> make_pair(T1 first, T1 second)
+	pair<T1, T2> make_pair(T1 first, T2 second)
 	{
 		return (pair<T1, T2> (first, second));
 	}
