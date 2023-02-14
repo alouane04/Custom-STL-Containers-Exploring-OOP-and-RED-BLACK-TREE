@@ -1,14 +1,14 @@
-SRC = main.cpp
+SRC = main.cpp vector_test.cpp map_test.cpp set_test.cpp
 
 NAME = ft_containers
 
 CC = c++
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 -g
+FLAGS = -Wall -Wextra -Werror -std=c++98
 
 OBJ = $(SRC:.cpp=.o)
 
-$(NAME): $(OBJ)
+$(NAME): common.hpp $(OBJ)
 	$(CC) $(FLAGS) -o $(NAME) $(SRC)
 
 %.o: %.cpp

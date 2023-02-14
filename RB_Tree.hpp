@@ -6,7 +6,7 @@
 /*   By: ariahi <ariahi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 11:20:28 by ariahi            #+#    #+#             */
-/*   Updated: 2023/02/13 11:44:24 by ariahi           ###   ########.fr       */
+/*   Updated: 2023/02/13 18:58:02 by ariahi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ namespace ft
 			// It's the operator= of the RB_Tree.
 			const RB_Tree<T, Comparator, Allocator> &operator=(const RB_Tree<T, Comparator, Allocator> &other)
 			{
-				delete_node(nil);
-				free_tree(root);
+				free_tree(nil);
+				delete_node(root);
 				comparator = other.comparator;
 				allocator = other.allocator;
 				size = 0;
